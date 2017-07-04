@@ -8,36 +8,26 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>JavaScript Quiz</title>
+    <title>CSS Quiz</title>
     <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
-        <h1>Javascript Quiz</h1>
+    <main role="main">
+        <h1>CSS Quiz</h1>
         <div class="container" id="one">
-
-            <div class="inner">
-                <div>
-                    <label for="full-name">Please enter your full name:</label>
-                    <input type="text" id="full-name" placeholder="Jane Doe">
-                </div>
-                <div>
-                    <label for="email">Please enter your email address:</label>
-                    <input type="email" id="email" placeholder="you@mail.com">
-                </div>
+            <div class="progress-bar">
+                <progress max="90" value="10"></progress>
+                <div class="percent-progress">0%</div>
+            </div>
+            <div id="questions-container">
 
             </div>
             <div class="last">
-                <div class="message-container">
-                    <span id="validation-message"></span>
-                </div>
-                <div class="btn-container">
-                    <button id="start" class="animate-right-arrow">Start quiz <i class="icon-right"></i></button>
-                </div>
-            </div>
-        </div>
-        <div class="container" id="two">
-            <div id="questions-container">
+
+                <button id="previous" class="animate-left-arrow invisible"><i class="icon-left"></i>Previous Question</button>
+
+                <button id="next" class="animate-right-arrow">Next Question<i class="icon-right"></i></button>
 
             </div>
             <div class="last">
@@ -45,17 +35,17 @@
                     <span class="error-message"></span>
                 </div>
 
-                <div class="btn-container">
+                <div class="btn-container hidden">
                     <button id="retry" class="animate-spin"><i class="icon-cw"></i>Retry</button>
                     <button id="calculate">Calculate Score</button>
                 </div>
             </div>
         </div>
 
-        <div class="container" id="three">
+        <div class="container" id="two">
             <div class="last">
                 <div class="message-container">
-                    <p>Congratulations on completing the quiz <span class="name">NAME</span>!</p>
+                    <p>Congratulations on completing the quiz!</p>
                     <p>Your score is <span id="score">SCORE</span> out of <span id="total">TOTAL</span>!</p>
                 </div>
                 <div class="btn-container">
@@ -63,7 +53,9 @@
                 </div>
             </div>
         </div>
-    <script src="quiz.js"></script>
+    </main>
+    <script defer src="quiz.js"></script>
+    <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 </body>
 
 </html>

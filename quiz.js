@@ -1,68 +1,105 @@
 // get the buttons
-var btnStart = document.getElementById("start");
 var btnRetry = document.getElementById("retry");
 var btnCalc = document.getElementById("calculate");
 var btnRestart = document.getElementById("restart");
 
-// get the three divs
-var divOne = document.getElementById("one");
-var divTwo = document.getElementById("two");
-var divThree = document.getElementById("three");
-
 // add listeners to buttons
-btnStart.addEventListener("click", validateInput);
 btnRetry.addEventListener("click", retryQuiz);
 btnCalc.addEventListener("click", calcScore);
 btnRestart.addEventListener("click", restartQuiz);
+
+// get the three divs
+var divOne = document.getElementById("one");
+var divTwo = document.getElementById("two");
+
 
 // question array
 var questions = [
 questionOne = {
         number: 1,
-        title: "1. Which is the correct way to link an external JavaScript file in HTML?",
-        answers: ['<code>&lt;script href="script.js" type="text/javascript"&gt;</code>', '<code>&lt;script src="script.js" rel="text/javascript"&gt;</code>', '<code>&lt;srcipt href="script.js" rel="text/javascript"&gt;</code>', '<code>&lt;script src="script.js" type="text/javascript"&gt;</code>'],
-        correctAnswer: 3
+        title: 'What does CSS stand for?',
+        answers: ['Cascading CSS', 'Cascading style sheets', 'Cascading separate style'],
+        correctAnswer: 1
 },
 
 questionTwo = {
         number: 2,
-        title: "2. Is JavaScript case-sensitive?",
-        answers: ['Yes, it\'s fussy about case', 'No, it\'s super chill'],
-        correctAnswer: 0
+        title: 'Which attribute can set text to bold?',
+        answers: ['text-decoration', 'font-style', 'font-weight'],
+        correctAnswer: 2
 },
 
 questionThree = {
         number: 3,
-        title: "3. Which statement is not true for the following? <pre><code>var num = 3</code></pre>",
-        answers: ['num == "3"', 'num === 3', "num == '3'", "num != 4", 'num === "3"', 'num == 3'],
-        correctAnswer: 4
+        title: 'Which tag is used to link an external CSS file?',
+        answers: ['<code>&lt;script&gt;</code>', '<code>&lt;link&gt;</code>', '<code>&lt;rel&gt;</code>'],
+        correctAnswer: 1
 },
+
 questionFour = {
         number: 4,
-        title: "4. Which events are fired when an element is clicked?",
-        answers: ['<code>click</code>', '<code>mousedown</code> and <code>mouseup</code>', '<code>mousedown</code>, <code>mouseup</code> and <code>click</code>'],
+        title: 'Which attribute sets the underline property?',
+        answers: ['font-style', 'text-decoration', 'font-weight'],
+        correctAnswer: 1
+},
+
+questionFive = {
+        number: 5,
+        title: 'Which measurement is NOT relative?',
+        answers: ['px', 'cm', '%', 'em'],
+        correctAnswer: 0
+},
+
+questionSix = {
+        number: 6,
+        title: 'Which measurement unit IS relative?',
+        answers: ['em', 'cm', 'mm', 'inch'],
+        correctAnswer: 0
+},
+
+questionSeven = {
+        number: 7,
+        title: 'What attribute is used move an elements content away from its border?',
+        answers: ['margin', 'padding', 'border', 'width'],
+        correctAnswer: 1
+},
+
+questionEight = {
+        number: 8,
+        title: 'Which attribute does not contribute to a block elements total width?',
+        answers: ['width', 'border', 'background-image', 'padding'],
         correctAnswer: 2
 },
 
-    questionFive = {
-        number: 5,
-        title: "5. What does this return? <pre><code>Boolean('12' > 10)</code></pre>",
-        answers: ['<code>True</code>', '<code>False</code>', '<code>NaN</code>'],
-        correctAnswer: 0
+questionNine = {
+        number: 9,
+        title: 'What property changes positioned elements display order?',
+        answers: ['width', 'background', 'z-index', 'azimuth'],
+        correctAnswer: 2
+},
+
+questionTen = {
+        number: 10,
+        title: 'Which value of background-repeat will cause a background to repeat vertically?',
+        answers: ['repeat-x', 'repeat', 'repeat-y', 'no-repeat'],
+        correctAnswer: 2
 }
 
 ];
 
-output = "";
-
 // get the container to set the output to
 var questionsContainer = document.getElementById("questions-container");
 
+var output = "";
 // build the html
+
+// add a new animation to each question div
+
+
 for (x in questions) {
-    output += "<div class='inner'>";
+    output += "<div class='inner hidden'>";
     output += "<div>";
-    output += "<legend class='question-heading'>" + questions[x].title + "</legend>";
+    output += "<legend class='question-heading'>" + questions[x].number + ". " + questions[x].title + "</legend>";
 
     for (var j = 0; j < questions[x].answers.length; j++) {
         output += "<div class='questions'>";
@@ -77,59 +114,70 @@ for (x in questions) {
 
 questionsContainer.innerHTML = output;
 
+// add an active class to the first question to show it
+document.querySelector(".inner").classList.add("active");
+
 // print total to page (equal to length of questions array)
 document.getElementById("total").innerHTML = questions.length;
 
 /* ========
 
-Validate User Input
+Next Question
 
 =========== */
 
-function validateInput() {
 
-    var errorMessage = "";
+document.getElementById("next").addEventListener("click", nextQuestion);
 
-    // get the user input
-    var strFullName = document.getElementById("full-name").value;
-    var strEmail = document.getElementById("email").value;
+document.getElementById("previous").addEventListener("click", previousQuestion);
 
-    // get the place to output validation message
-    var validationMessage = document.getElementById("validation-message");
+var i = 1;
 
-    // validate full name
-    if (strFullName == "") {
-        errorMessage += "<li>Please enter a name</li>";
+function nextQuestion() {
 
-    } else if (!/^[a-zA-Z]{2,}\s[a-zA-Z]{2,}$/.test(strFullName)) {
-        errorMessage += "<li>" + strFullName + " is NOT a valid first and last name</li>";
+    // show previous question button if i > 2
+    if (i >= 1) {
+        document.getElementById("previous").classList.add("active");
     }
 
-    // validate email
-    if (strEmail == "") {
-        errorMessage += "<li>Please enter an email address</li>";
-
-
-    } else if (!/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/.test(strEmail)) {
-        errorMessage += "<li>" + strEmail + " is NOT a valid email address</li>";
-
+    // if press next button and i already equals 10  
+    if (i == 9) {
+        document.getElementById("next").classList.add("invisible");
+        document.getElementById("next").classList.remove("active");
     }
 
-    // update validation message
-    validationMessage.innerHTML = "<ul>" + errorMessage + "</ul>";
 
-    // if both name and email are correct, show div containing the quiz and hide first div 
-    if (strFullName != "" && strFullName.match(/^[a-zA-Z]{2,}\s[a-zA-Z]{2,}$/) && strEmail != "" && /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/.test(strEmail)) {
-        divTwo.style.display = 'block';
-        divOne.style.display = 'none';
-        // print the user's name to the last div
-        document.querySelector('.name').innerHTML = strFullName.split(" ")[0];
+    // get element at index (starting with 0)
+    document.getElementsByClassName("inner")[i - 1].classList.remove("active");
+
+    // get the element 1 after the first one
+    document.getElementsByClassName("inner")[i].classList.add("active");
+
+    i++;
+}
+
+function previousQuestion() {
+    if (i == 10) {
+        document.getElementById("next").classList.remove("invisible");
+
+    }
+    if (i == 2) {
+        document.getElementById("previous").classList.remove("active");
+        document.getElementById("previous").classList.add("invisible");
+    }
+    if (i > 1) {
+        // get element at index (starting with 0)
+        document.getElementsByClassName("inner")[i - 1].classList.remove("active");
+
+        // get the element 1 after the first one
+        document.getElementsByClassName("inner")[i - 2].classList.add("active");
+
+        i--;
     }
 
-    // reset error message and name and email fields
-    errorMessage = "";
 
 }
+
 
 /* ========
 
@@ -179,17 +227,13 @@ function calcScore() {
         document.querySelector(".error-message").innerHTML = "Halt! You must answer all the questions first, you missed the following: " + unansweredMessage;
     } else {
         // hide second div and show third 
-        divTwo.style.display = 'none';
-        divThree.style.display = 'block';
+        divOne.style.display = 'none';
+        divTwo.style.display = 'block';
     }
 
     // update page to reflect score
     var scoreContainer = document.getElementById("score");
     scoreContainer.innerHTML = score;
-
-
-
-
 }
 
 
@@ -213,7 +257,6 @@ function retryQuiz() {
 }
 
 
-
 /* ========
 
 Restart Quiz
@@ -221,10 +264,7 @@ Restart Quiz
 =========== */
 
 function restartQuiz() {
-    document.getElementById("full-name").value = "";
-    document.getElementById("email").value = "";
-    /* hide second div and show third */
-    divThree.style.display = 'none';
+    divTwo.style.display = 'none';
     divOne.style.display = 'block';
 
     // clear all radio buttons and remove missed questions message
