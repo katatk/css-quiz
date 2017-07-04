@@ -145,7 +145,9 @@ h1 {
 
 .last {
     margin-top: 0;
-    align-items: space-between;
+    justify-content: space-between;
+    display: flex;
+    margin-top: 2rem;
 }
 
 .message-container {
@@ -163,7 +165,7 @@ button {
     background-color: $btn-color;
     color: #fff;
     border: 0;
-    padding: 1.6rem;
+    padding: 1rem;
     margin-bottom: 1rem;
     display: block;
     flex-grow: 0;
@@ -171,6 +173,7 @@ button {
     font-family: 'Varela round', sans-serif;
     border-radius: 5px;
     position: relative;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
     &:hover {
         cursor: pointer;
         background-color: $btn-hover-color;
@@ -178,17 +181,7 @@ button {
     }
     &#start,
     &#restart {
-        padding: 1.6rem;
-    }
-}
-
-@media (min-width: 768px) {
-    button {
         padding: 1.2rem;
-        &#start,
-        &#restart {
-            padding: 1.2rem;
-        }
     }
 }
 
@@ -236,22 +229,5 @@ li {
     }
     .message-container {
         text-align: left;
-    }
-    .last {
-        margin-top: 2rem;
-    }
-}
-
-@media (min-width: 690px) {
-    .message-container {
-        display: inline-block;
-        max-width: 58%;
-    }
-    .last {
-        display: flex;
-        justify-content: space-between;
-    }
-    .message-container {
-        margin-top: 0;
     }
 }

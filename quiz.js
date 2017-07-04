@@ -1,10 +1,8 @@
 // get the buttons
-var btnRetry = document.getElementById("retry");
 var btnCalc = document.getElementById("calculate");
-var btnRestart = document.getElementById("restart");
+var btnRestart = document.getElementById("retry");
 
 // add listeners to buttons
-btnRetry.addEventListener("click", retryQuiz);
 btnCalc.addEventListener("click", calcScore);
 btnRestart.addEventListener("click", restartQuiz);
 
@@ -128,7 +126,6 @@ Next Question
 
 
 document.getElementById("next").addEventListener("click", nextQuestion);
-
 document.getElementById("previous").addEventListener("click", previousQuestion);
 
 var i = 1;
@@ -142,8 +139,10 @@ function nextQuestion() {
 
     // if press next button and i already equals 10  
     if (i == 9) {
-        document.getElementById("next").classList.add("invisible");
         document.getElementById("next").classList.remove("active");
+        btnCalc.classList.add("active");
+        document.getElementById("next").classList.add("hidden");
+
     }
 
 
@@ -158,7 +157,8 @@ function nextQuestion() {
 
 function previousQuestion() {
     if (i == 10) {
-        document.getElementById("next").classList.remove("invisible");
+        document.getElementById("next").classList.remove("hidden");
+        btnCalc.classList.remove("active");
 
     }
     if (i == 2) {
@@ -174,10 +174,7 @@ function previousQuestion() {
 
         i--;
     }
-
-
 }
-
 
 /* ========
 
@@ -204,7 +201,6 @@ function calcScore() {
 
             // if an answer is checked, then see if it is the correct answer
             if (questionAnswers[j].checked === true) {
-                console.log(questionAnswers[j]);
                 isChecked = true;
 
                 // if correct answer, add to score
@@ -224,7 +220,7 @@ function calcScore() {
 
     // if none are checked, throw an error
     if (unansweredMessage !== "") {
-        document.querySelector(".error-message").innerHTML = "Halt! You must answer all the questions first, you missed the following: " + unansweredMessage;
+        document.querySelector(".error-message").innerHTML = "Whoa there. You must answer all the questions first before you can calculate your score. You missed the following: <br>" + unansweredMessage;
     } else {
         // hide second div and show third 
         divOne.style.display = 'none';
@@ -269,5 +265,12 @@ function restartQuiz() {
 
     // clear all radio buttons and remove missed questions message
     retryQuiz();
+
+    document.getElementsByClassName("inner")[10].classList.remove("active")
+    document.getElementsByClassName("inner")[1].classList.add("active");
+
+
+    i = 1;
+
 
 }
