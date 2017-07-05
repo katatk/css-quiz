@@ -1,10 +1,14 @@
 // get the buttons
 var btnCalc = document.getElementById("calculate");
 var btnRestart = document.getElementById("retry");
+var btnNext = document.getElementById("next");
+var btnPrev = document.getElementById("previous");
 
 // add listeners to buttons
 btnCalc.addEventListener("click", calcScore);
 btnRestart.addEventListener("click", restartQuiz);
+btnNext.addEventListener("click", nextQuestion);
+btnPrev.addEventListener("click", previousQuestion);
 
 // get the three divs
 var divOne = document.getElementById("one");
@@ -95,13 +99,13 @@ var output = "";
 
 
 for (x in questions) {
-    output += "<div class='inner hidden'>";
+    output += "<div class='inner no-display'>";
     output += "<div>";
     output += "<legend class='question-heading'>" + questions[x].number + ". " + questions[x].title + "</legend>";
 
     for (var j = 0; j < questions[x].answers.length; j++) {
         output += "<div class='questions'>";
-        output += "<input type='radio' name='q" + questions[x].number + "'>";
+        output += "<input type='radio' name='q" + questions[x].number + "' onclick='isChecked(this)'>";
         output += "<label>" + questions[x].answers[j] + "</label>";
         output += "</div>";
     }
@@ -118,52 +122,134 @@ document.querySelector(".inner").classList.add("active");
 // print total to page (equal to length of questions array)
 document.getElementById("total").innerHTML = questions.length;
 
+
+/* make next button active */
+function activateNextBtn() {
+    btnNext.classList.remove("inactive");
+    btnNext.removeAttribute("disabled");
+    btnNext.classList.add("animate-right-arrow");
+}
+
+/* make next button inactive */
+function inactivateNextBtn() {
+    btnNext.classList.add("inactive");
+    btnNext.setAttribute("disabled", "");
+    btnNext.classList.remove("animate-right-arrow");
+}
+
+/* ========
+
+Calculate Score
+
+=========== */
+// set the user's score
+var score = 0;
+
+function calcScore() {
+
+    // store correct answer for each question 
+    var correct = questions[i - 1].correctAnswer;
+
+    // get the radio buttons to loop through and see if they're checked
+    var questionAnswers = document.querySelectorAll('[name=q' + questions[i - 1].number + ']');
+    var isChecked = false;
+
+    // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
+    for (var j = 0; j < questions[i - 1].answers.length; j++) {
+
+        // if an answer is checked, then see if it is the correct answer
+        if (questionAnswers[j].checked === true) {
+            isChecked = true;
+
+            // if correct answer, add to score
+            if (j == correct) {
+                score++;
+            }
+        }
+    }
+
+    // if none are checked, throw an error
+    if (isChecked === false) {
+        btnNext.classList.add("inactive");
+        btnNext.setAttribute("disabled", "");
+        document.querySelector(".error-message").innerHTML = "Whoa there. You must answer this question before moving on to the next.";
+
+
+    } else {
+
+        document.querySelector(".error-message").innerHTML = "";
+
+    }
+
+    // update page to reflect score
+    var scoreContainer = document.getElementById("score");
+    scoreContainer.innerHTML = score;
+}
+
+/* ========
+
+Is checked
+
+=========== */
+
+function isChecked(el) {
+    if (el.checked === true) {
+        activateNextBtn();
+    }
+
+}
+
+
 /* ========
 
 Next Question
 
 =========== */
 
-
-document.getElementById("next").addEventListener("click", nextQuestion);
-document.getElementById("previous").addEventListener("click", previousQuestion);
-
 var i = 1;
 
 function nextQuestion() {
 
-    // show previous question button if i > 2
-    if (i >= 1) {
-        document.getElementById("previous").classList.add("active");
+    // make sure question is answered before moving on the next
+    if (questions[i]) {
+
+        // show previous question button if i > 2
+        if (i >= 1) {
+
+            // go to next question with next button being inactive
+            inactivateNextBtn();
+            btnPrev.classList.add("active");
+        }
+
+
+        // on the last question, hide the next button and show the calculation button
+        if (i == 9) {
+            btnNext.classList.remove("active");
+            btnNext.classList.add("no-display");
+
+            btnCalc.classList.add("active");
+        }
+
+        // get the element 1 after the first one
+        document.getElementsByClassName("inner")[i].classList.add("active");
+        // get element at index (starting with 0)
+        document.getElementsByClassName("inner")[i - 1].classList.remove("active");
+
+
+
+        i++;
     }
-
-    // if press next button and i already equals 10  
-    if (i == 9) {
-        document.getElementById("next").classList.remove("active");
-        btnCalc.classList.add("active");
-        document.getElementById("next").classList.add("hidden");
-
-    }
-
-
-    // get element at index (starting with 0)
-    document.getElementsByClassName("inner")[i - 1].classList.remove("active");
-
-    // get the element 1 after the first one
-    document.getElementsByClassName("inner")[i].classList.add("active");
-
-    i++;
 }
 
 function previousQuestion() {
     if (i == 10) {
-        document.getElementById("next").classList.remove("hidden");
+        btnNext.classList.remove("no-display");
         btnCalc.classList.remove("active");
 
     }
     if (i == 2) {
-        document.getElementById("previous").classList.remove("active");
-        document.getElementById("previous").classList.add("invisible");
+        btnPrev.classList.remove("active");
+        btnPrev.classList.add("invisible");
     }
     if (i > 1) {
         // get element at index (starting with 0)
@@ -176,61 +262,6 @@ function previousQuestion() {
     }
 }
 
-/* ========
-
-Calculate Score
-
-=========== */
-
-function calcScore() {
-    // set the user's score
-    var score = 0;
-
-    var unansweredMessage = "";
-
-    for (x in questions) {
-        // store correct answer for each question 
-        var correct = questions[x].correctAnswer;
-
-        // get the radio buttons to loop through and see if they're checked
-        var questionAnswers = document.querySelectorAll('[name=q' + questions[x].number + ']');
-        var isChecked = false;
-
-        // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
-        for (var j = 0; j < questions[x].answers.length; j++) {
-
-            // if an answer is checked, then see if it is the correct answer
-            if (questionAnswers[j].checked === true) {
-                isChecked = true;
-
-                // if correct answer, add to score
-                if (j == correct) {
-                    score++;
-                }
-
-            }
-        }
-
-        // If there was no radio buttons checked for the question we need to add to unanswered string.
-        if (isChecked === false) {
-            unansweredMessage += questions[x].number + ", ";
-        }
-    }
-
-
-    // if none are checked, throw an error
-    if (unansweredMessage !== "") {
-        document.querySelector(".error-message").innerHTML = "Whoa there. You must answer all the questions first before you can calculate your score. You missed the following: <br>" + unansweredMessage;
-    } else {
-        // hide second div and show third 
-        divOne.style.display = 'none';
-        divTwo.style.display = 'block';
-    }
-
-    // update page to reflect score
-    var scoreContainer = document.getElementById("score");
-    scoreContainer.innerHTML = score;
-}
 
 
 /* ========

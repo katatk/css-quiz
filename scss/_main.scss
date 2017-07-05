@@ -81,7 +81,7 @@ h1 {
     border-radius: 5px;
 }
 
-.hidden {
+.no-display {
     display: none;
 }
 
@@ -92,6 +92,16 @@ h1 {
 .active {
     display: block;
     visibility: visible;
+}
+
+.inactive {
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    &:hover {
+        cursor: not-allowed;
+        top: 0;
+        background-color: $btn-color;
+    }
 }
 
 
@@ -158,9 +168,7 @@ h1 {
     width: 100%;
 }
 
-$btn-color: #ef415b;
-$btn-hover-color: darken($btn-color,
-10%);
+
 button {
     background-color: $btn-color;
     color: #fff;
