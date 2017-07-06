@@ -5,7 +5,7 @@ var btnNext = document.getElementById("next");
 var btnPrev = document.getElementById("previous");
 
 // add listeners to buttons
-btnCalc.addEventListener("click", calcScore);
+btnCalc.addEventListener("click", displayScore);
 btnRestart.addEventListener("click", restartQuiz);
 btnNext.addEventListener("click", nextQuestion);
 btnPrev.addEventListener("click", previousQuestion);
@@ -13,6 +13,10 @@ btnPrev.addEventListener("click", previousQuestion);
 // get the three divs
 var divOne = document.getElementById("one");
 var divTwo = document.getElementById("two");
+
+// get the progress bar + percent
+var progressBar = document.getElementById("progress-bar");
+var progressPercent = document.getElementById("percent-progress");
 
 
 // question array
@@ -170,20 +174,33 @@ function calcScore() {
 
     // if none are checked, throw an error
     if (isChecked === false) {
-        btnNext.classList.add("inactive");
-        btnNext.setAttribute("disabled", "");
         document.querySelector(".error-message").innerHTML = "Whoa there. You must answer this question before moving on to the next.";
 
 
     } else {
-
         document.querySelector(".error-message").innerHTML = "";
 
     }
 
+
+}
+
+
+/* ==== 
+
+display score
+
+====== */
+
+function displayScore() {
+
+    divTwo.style.display = 'block';
+    divOne.style.display = 'none';
+
     // update page to reflect score
     var scoreContainer = document.getElementById("score");
     scoreContainer.innerHTML = score;
+
 }
 
 /* ========
@@ -199,7 +216,6 @@ function isChecked(el) {
 
 }
 
-
 /* ========
 
 Next Question
@@ -207,14 +223,24 @@ Next Question
 =========== */
 
 var i = 1;
+var progress;
 
 function nextQuestion() {
+
+    // add to the progress bar
+    progress = parseInt(progressBar.getAttribute("value"));
+    progress = progress + 10;
+    progressBar.setAttribute("value", progress);
+    progressPercent.innerHTML = progress + "%";
+
 
     // make sure question is answered before moving on the next
     if (questions[i]) {
 
         // show previous question button if i > 2
         if (i >= 1) {
+
+
 
             // go to next question with next button being inactive
             inactivateNextBtn();
@@ -230,6 +256,8 @@ function nextQuestion() {
             btnCalc.classList.add("active");
         }
 
+
+
         // get the element 1 after the first one
         document.getElementsByClassName("inner")[i].classList.add("active");
         // get element at index (starting with 0)
@@ -242,6 +270,14 @@ function nextQuestion() {
 }
 
 function previousQuestion() {
+    
+    progress = progress - 10;
+    progressBar.setAttribute("value", progress);
+    progressPercent.innerHTML = progress + "%";
+
+
+    activateNextBtn();
+
     if (i == 10) {
         btnNext.classList.remove("no-display");
         btnCalc.classList.remove("active");
