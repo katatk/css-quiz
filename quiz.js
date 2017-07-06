@@ -5,7 +5,7 @@ var btnNext = document.getElementById("next");
 var btnPrev = document.getElementById("previous");
 
 // add listeners to buttons
-btnNext.addEventListener("click", calcScore);
+btnCalc.addEventListener("click", calcScore);
 btnCalc.addEventListener("click", displayScore);
 btnRestart.addEventListener("click", restartQuiz);
 btnNext.addEventListener("click", nextQuestion);
@@ -212,23 +212,25 @@ var score = 0;
 
 function calcScore() {
 
-    // store correct answer for each question 
-    var correct = questions[i - 1].correctAnswer;
+    for (var a = 0; a < questions.length; a++) {
 
+        // store correct answer for each question 
+        var correct = questions[a].correctAnswer;
 
-    // get the radio buttons to loop through and see if they're checked
-    var questionAnswers = document.querySelectorAll('[name=q' + questions[i - 1].number + ']');
-    var isChecked = false;
+        // get the radio buttons to loop through and see if they're checked
+        var questionAnswers = document.querySelectorAll('[name=q' + questions[a].number + ']');
+        var isChecked = false;
 
-    // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
-    for (var j = 0; j < questions[i - 1].answers.length; j++) {
-        // if an answer is checked, then see if it is the correct answer
-        if (questionAnswers[j].checked == true) {
-            isChecked = true;
+        // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
+        for (var j = 0; j < questions[a].answers.length; j++) {
+            // if an answer is checked, then see if it is the correct answer
+            if (questionAnswers[j].checked == true) {
+                isChecked = true;
 
-            // if correct answer, add to score
-            if (j == correct) {
-                score++;
+                // if correct answer, add to score
+                if (j == correct) {
+                    score++;
+                }
             }
         }
     }
