@@ -15,9 +15,27 @@
 <body>
     <main role="main">
         <h1>CSS Quiz</h1>
-        <div class="container" id="one">
+       <!-- <div class="container slideRight" id="instructions">
+            <div class="box">
+                <h2>Instructions</h2>
+                <p>Two rules:</p>
+                <ol>
+                    <li>Answer each question before moving on to the next</li>
+                    <li>Have fun!</li>
+                </ol>
+            </div>
+
+            <div class="last">
+
+                <button onclick="startQuiz()">Let's go!</button>
+
+            </div>
+        </div>
+-->
+
+        <div class="container <!--no-display-->" id="one">
             <div class="progress-bar">
-                <progress id="progress-bar" max="100" value="0" class="slideRight"></progress>
+                <progress id="progress-bar" max="100" value="0"></progress>
                 <div id="percent-progress">0%</div>
             </div>
             <div id="questions-container">
@@ -33,18 +51,12 @@
 
             </div>
 
-            <div class="message-container">
-                <span class="error-message"></span>
-            </div>
-
         </div>
 
-        <div class="container" id="two">
+        <div class="container box" id="two">
+            <p>Congratulations on completing the quiz!</p>
+            <p>Your score is <span id="score">SCORE</span> out of <span id="total">TOTAL</span>!</p>
 
-            <div class="message-container">
-                <p>Congratulations on completing the quiz!</p>
-                <p>Your score is <span id="score">SCORE</span> out of <span id="total">TOTAL</span>!</p>
-            </div>
             <div class="btn-container">
                 <button id="retry" class="animate-spin"><i class="icon-cw"></i>Retry</button>
             </div>

@@ -5,12 +5,14 @@ var btnNext = document.getElementById("next");
 var btnPrev = document.getElementById("previous");
 
 // add listeners to buttons
+btnNext.addEventListener("click", calcScore);
 btnCalc.addEventListener("click", displayScore);
 btnRestart.addEventListener("click", restartQuiz);
 btnNext.addEventListener("click", nextQuestion);
 btnPrev.addEventListener("click", previousQuestion);
 
 // get the three divs
+var divInstructions = document.getElementById("instructions");
 var divOne = document.getElementById("one");
 var divTwo = document.getElementById("two");
 
@@ -103,7 +105,7 @@ var output = "";
 
 
 for (x in questions) {
-    output += "<div class='inner no-display'>";
+    output += "<div class='inner box no-display'>";
     output += "<div>";
     output += "<legend class='question-heading'>" + questions[x].number + ". " + questions[x].title + "</legend>";
 
@@ -127,6 +129,23 @@ document.querySelector(".inner").classList.add("active");
 document.getElementById("total").innerHTML = questions.length;
 
 
+
+/* ========
+
+Start Quiz
+
+=========== */
+
+function startQuiz() {
+    divInstructions.style.display = 'none';
+    divOne.classList.remove("no-display");
+}
+
+/* show next button */
+function showNextBtn() {
+    btnNext.classList.remove("no-display");
+}
+
 /* make next button active */
 function activateNextBtn() {
     btnNext.classList.remove("inactive");
@@ -139,50 +158,6 @@ function inactivateNextBtn() {
     btnNext.classList.add("inactive");
     btnNext.setAttribute("disabled", "");
     btnNext.classList.remove("animate-right-arrow");
-}
-
-/* ========
-
-Calculate Score
-
-=========== */
-// set the user's score
-var score = 0;
-
-function calcScore() {
-
-    // store correct answer for each question 
-    var correct = questions[i - 1].correctAnswer;
-
-    // get the radio buttons to loop through and see if they're checked
-    var questionAnswers = document.querySelectorAll('[name=q' + questions[i - 1].number + ']');
-    var isChecked = false;
-
-    // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
-    for (var j = 0; j < questions[i - 1].answers.length; j++) {
-
-        // if an answer is checked, then see if it is the correct answer
-        if (questionAnswers[j].checked === true) {
-            isChecked = true;
-
-            // if correct answer, add to score
-            if (j == correct) {
-                score++;
-            }
-        }
-    }
-
-    // if none are checked, throw an error
-    if (isChecked === false) {
-        document.querySelector(".error-message").innerHTML = "Whoa there. You must answer this question before moving on to the next.";
-
-
-    } else {
-        document.querySelector(".error-message").innerHTML = "";
-
-    }
-
-
 }
 
 
@@ -205,7 +180,7 @@ function displayScore() {
 
 /* ========
 
-Is checked
+Check is any radio buttons are checked before activating next button
 
 =========== */
 
@@ -222,7 +197,45 @@ Next Question
 
 =========== */
 
+// current question
 var i = 1;
+
+/* ========
+
+Calculate Score
+
+=========== */
+
+
+// set the user's score
+var score = 0;
+
+function calcScore() {
+
+    // store correct answer for each question 
+    var correct = questions[i - 1].correctAnswer;
+
+
+    // get the radio buttons to loop through and see if they're checked
+    var questionAnswers = document.querySelectorAll('[name=q' + questions[i - 1].number + ']');
+    var isChecked = false;
+
+    // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
+    for (var j = 0; j < questions[i - 1].answers.length; j++) {
+        // if an answer is checked, then see if it is the correct answer
+        if (questionAnswers[j].checked == true) {
+            isChecked = true;
+
+            // if correct answer, add to score
+            if (j == correct) {
+                score++;
+            }
+        }
+    }
+
+}
+
+
 var progress;
 
 function nextQuestion() {
@@ -239,8 +252,6 @@ function nextQuestion() {
 
         // show previous question button if i > 2
         if (i >= 1) {
-
-
 
             // go to next question with next button being inactive
             inactivateNextBtn();
@@ -270,7 +281,7 @@ function nextQuestion() {
 }
 
 function previousQuestion() {
-    
+
     progress = progress - 10;
     progressBar.setAttribute("value", progress);
     progressPercent.innerHTML = progress + "%";
@@ -279,7 +290,7 @@ function previousQuestion() {
     activateNextBtn();
 
     if (i == 10) {
-        btnNext.classList.remove("no-display");
+        showNextBtn();
         btnCalc.classList.remove("active");
 
     }
@@ -302,12 +313,11 @@ function previousQuestion() {
 
 /* ========
 
-Retry Quiz
+Restart Quiz
 
 =========== */
 
-
-function retryQuiz() {
+function restartQuiz() {
 
     // get all radio buttons
     var allAnswers = document.querySelectorAll('input[type=radio]');
@@ -316,28 +326,28 @@ function retryQuiz() {
     for (answer in allAnswers) {
         allAnswers[answer].checked = false;
     }
-    document.querySelector(".error-message").innerHTML = "";
-}
 
-
-/* ========
-
-Restart Quiz
-
-=========== */
-
-function restartQuiz() {
+    // display questions, hide total div
     divTwo.style.display = 'none';
     divOne.style.display = 'block';
 
-    // clear all radio buttons and remove missed questions message
-    retryQuiz();
+    // hide the 10th question, show the 1st question
+    document.getElementsByClassName("inner")[9].classList.remove("active")
+    document.getElementsByClassName("inner")[0].classList.add("active");
 
-    document.getElementsByClassName("inner")[10].classList.remove("active")
-    document.getElementsByClassName("inner")[1].classList.add("active");
+    // remove calculate score button, inactivate next button, show next button, hide previous button
+    inactivateNextBtn();
+    showNextBtn();
+    btnCalc.classList.remove("active");
+    btnPrev.classList.remove("active");
 
-
+    // set question number back to 1
     i = 1;
+
+    // reset progress bar +percentage
+    progress = 0;
+    progressBar.setAttribute("value", progress);
+    progressPercent.innerHTML = progress + "%";
 
 
 }
