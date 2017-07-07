@@ -193,9 +193,10 @@ function isChecked(el) {
             document.getElementById("progress").style.width = progress;
 
             progressPercent.innerHTML = progress;
-            
+
             if (i == 10) {
                 btnCalc.classList.remove("inactive");
+                btnCalc.removeAttribute("disabled");
             }
 
             if (progress == "100%") {
@@ -351,6 +352,7 @@ function previousQuestion() {
     if (i == 10) {
         showNextBtn();
         btnCalc.classList.remove("active");
+        btnCalc.classList.add("no-display");
 
     }
     if (i == 2) {
@@ -402,6 +404,7 @@ function restartQuiz() {
     showNextBtn();
     btnCalc.classList.add("no-display");
     btnCalc.classList.add("inactive");
+    btnCalc.setAttribute("disabled", "");
     btnPrev.classList.remove("active");
 
     // set question number back to 1
