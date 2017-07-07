@@ -68,7 +68,11 @@ h2 {
 }
 
 p {
-    margin: 0;
+    margin-top: 0;
+}
+
+p:last-child {
+    margin-bottom: 0;
 }
 
 .container {
@@ -205,11 +209,18 @@ button {
 ul,
 ol {
     margin: 0;
-    padding: 0;
+    padding-left: 2rem;
 }
 
-li {
-    list-style-position: inside;
+li.incorrect-questions {
+    list-style: none;
+    &::before {
+        content: '\e803';
+        font-family: 'fontello';
+        display: inline-block;
+        margin-right: 1em;
+        font-size: 1.2rem;
+    }
 }
 
 .icon-cancel {

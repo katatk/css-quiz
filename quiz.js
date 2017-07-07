@@ -1,18 +1,19 @@
 // get the buttons
+var btnStart = document.getElementById("start-quiz");
 var btnCalc = document.getElementById("calculate");
 var btnRestart = document.getElementById("retry");
 var btnNext = document.getElementById("next");
 var btnPrev = document.getElementById("previous");
 
 // add listeners to buttons
+btnStart.addEventListener("click", startQuiz);
 btnCalc.addEventListener("click", calcScore);
-btnCalc.addEventListener("click", displayScore);
 btnRestart.addEventListener("click", restartQuiz);
 btnNext.addEventListener("click", nextQuestion);
 btnPrev.addEventListener("click", previousQuestion);
 
 // get the three divs
-var divInstructions = document.getElementById("instructions");
+var divInstructions = document.getElementById("instructions-container");
 var divOne = document.getElementById("one");
 var divTwo = document.getElementById("two");
 
@@ -54,8 +55,8 @@ questionFour = {
 questionFive = {
         number: 5,
         title: 'Which measurement is NOT relative?',
-        answers: ['px', 'cm', '%', 'em'],
-        correctAnswer: 0
+        answers: ['rem', 'cm', '%', 'em'],
+        correctAnswer: 1
 },
 
 questionSix = {
@@ -95,38 +96,42 @@ questionTen = {
 
 ];
 
-// get the container to set the output to
-var questionsContainer = document.getElementById("questions-container");
-
-var output = "";
-// build the html
+// animations array 
+var animations = ["slideRight", "slideLeft", "slideUp", "slideDown"];
 
 // add a new animation to each question div
+window.addEventListener("DOMContentLoaded", function () {
 
+    var numRandom;
+    var output = "";
+    for (x in questions) {
+        output += "<div class='inner box no-display ";
 
-for (x in questions) {
-    output += "<div class='inner box no-display'>";
-    output += "<div>";
-    output += "<legend class='question-heading'>" + questions[x].number + ". " + questions[x].title + "</legend>";
+        // add a random animation class to each question
+        numRandom = Math.floor(Math.random() * animations.length);
+        output += animations[numRandom];
 
-    for (var j = 0; j < questions[x].answers.length; j++) {
-        output += "<div class='questions'>";
-        output += "<input type='radio' name='q" + questions[x].number + "' onclick='isChecked(this)'>";
-        output += "<label>" + questions[x].answers[j] + "</label>";
+        output += "'>";
+        output += "<div>";
+        output += "<legend class='question-heading'>" + questions[x].number + ". " + questions[x].title + "</legend>";
+
+        for (var j = 0; j < questions[x].answers.length; j++) {
+            output += "<div class='questions'>";
+            output += "<input type='radio' name='q" + questions[x].number + "' onclick='isChecked(this)'>";
+            output += "<label>" + questions[x].answers[j] + "</label>";
+            output += "</div>";
+        }
+
+        output += "</div>";
         output += "</div>";
     }
 
-    output += "</div>";
-    output += "</div>";
-}
+    document.getElementById("questions-container").innerHTML = output;
 
-questionsContainer.innerHTML = output;
+    // add an active class to the first question to show it
+    document.querySelector(".inner").classList.add("active");
 
-// add an active class to the first question to show it
-document.querySelector(".inner").classList.add("active");
-
-// print total to page (equal to length of questions array)
-document.getElementById("total").innerHTML = questions.length;
+});
 
 
 
@@ -161,31 +166,39 @@ function inactivateNextBtn() {
 }
 
 
-/* ==== 
-
-display score
-
-====== */
-
-function displayScore() {
-
-    divTwo.style.display = 'block';
-    divOne.style.display = 'none';
-
-    // update page to reflect score
-    var scoreContainer = document.getElementById("score");
-    scoreContainer.innerHTML = score;
-
-}
-
 /* ========
 
-Check is any radio buttons are checked before activating next button
+Check is question has been answered before activating next button
 
 =========== */
 
+/* Store the questions that have been answered */
+var answeredQuestions = [];
+
+var progress;
+
 function isChecked(el) {
+
+    // if the current radio box is checked
     if (el.checked === true) {
+
+        // if the question has not been answered yet (is not in the answered questions array)
+        if (answeredQuestions.indexOf(i) == -1) {
+
+            // add to the answered questions array
+            answeredQuestions.push(i);
+
+            // add to the progress bar
+            progress = (i * 10) + "%";
+            document.getElementById("progress").style.width = progress;
+
+            progressPercent.innerHTML = progress;
+
+            if (progress == "100%") {
+                document.getElementById("progress").style["border-radius"] = "5px";
+            }
+
+        }
         activateNextBtn();
     }
 
@@ -206,11 +219,13 @@ Calculate Score
 
 =========== */
 
-
 // set the user's score
 var score = 0;
 
 function calcScore() {
+
+    // build an array for incorrect questions
+    var incorrect = [];
 
     for (var a = 0; a < questions.length; a++) {
 
@@ -231,9 +246,53 @@ function calcScore() {
                 if (j == correct) {
                     score++;
                 }
+
+                // if question is incorrect, add to incorrect list
+                else if (j != correct) {
+                    incorrect.push(questions[a].number);
+                }
             }
         }
     }
+
+    var message = "";
+
+    if (score < 6) {
+        message = "Oh dear... looks like you could use some more practice.";
+    }
+
+    if (6 <= score && score <= 7) {
+        message = "Not too shabby.";
+    }
+
+    if (8 <= score && score <= 9) {
+        message = "Go you!";
+    }
+
+
+    if (score == 10) {
+        message = "Wow, you got 100%! You clever cookie you (;";
+    }
+
+
+    /* build the html to display to the page */
+    var output = "";
+    output += "<p> Congratulations on completing the quiz!</p>"
+    output += "<p> Your score is " + score + " out of " + questions.length + ". " + message + "</p><p>The following questions were incorrect:</p><ul>";
+
+    for (var y = 0; y < incorrect.length; y++) {
+        output += "<li class='incorrect-questions'>" + incorrect[y] + "</li>";
+
+    }
+    output += "</ul>";
+
+    document.getElementById("score-container").innerHTML = output;
+
+    /* hide the questions div and show the score div */
+    divTwo.style.display = 'block';
+    divOne.style.display = 'none';
+
+    score = 0;
 
 }
 
@@ -242,55 +301,49 @@ var progress;
 
 function nextQuestion() {
 
-    // add to the progress bar
-    progress = parseInt(progressBar.getAttribute("value"));
-    progress = progress + 10;
-    progressBar.setAttribute("value", progress);
-    progressPercent.innerHTML = progress + "%";
+    // show previous question button from question 2 onwards
+    if (i >= 1) {
 
-
-    // make sure question is answered before moving on the next
-    if (questions[i]) {
-
-        // show previous question button if i > 2
-        if (i >= 1) {
-
-            // go to next question with next button being inactive
-            inactivateNextBtn();
-            btnPrev.classList.add("active");
-        }
-
-
-        // on the last question, hide the next button and show the calculation button
-        if (i == 9) {
-            btnNext.classList.remove("active");
-            btnNext.classList.add("no-display");
-
-            btnCalc.classList.add("active");
-        }
-
-
-
-        // get the element 1 after the first one
-        document.getElementsByClassName("inner")[i].classList.add("active");
-        // get element at index (starting with 0)
-        document.getElementsByClassName("inner")[i - 1].classList.remove("active");
-
-
-
-        i++;
+        // go to next question with next button being inactive
+        btnPrev.classList.add("active");
     }
+
+    // on the last question, hide the next button and show the calculation button
+    if (i == 9) {
+        btnNext.classList.remove("active");
+        btnNext.classList.add("no-display");
+
+        btnCalc.classList.add("active");
+    }
+
+    // get the current question and show it
+    document.getElementsByClassName("inner")[i].classList.add("active");
+    // get the question just been and hide it
+    document.getElementsByClassName("inner")[i - 1].classList.remove("active");
+
+
+
+    i++;
+
+    // if current question has been answered, make next button active
+    if (answeredQuestions.includes(i)) {
+
+        activateNextBtn();
+    }
+
+    if (!answeredQuestions.includes(i)) {
+        inactivateNextBtn();
+    }
+
+
+
 }
 
 function previousQuestion() {
 
-    progress = progress - 10;
-    progressBar.setAttribute("value", progress);
-    progressPercent.innerHTML = progress + "%";
-
-
     activateNextBtn();
 
+    // if on question 10 and previous button is pushed, hide calc score button and show next question button
     if (i == 10) {
         showNextBtn();
         btnCalc.classList.remove("active");
@@ -321,6 +374,9 @@ Restart Quiz
 
 function restartQuiz() {
 
+    // set answered questions back to an empty array
+    answeredQuestions = [];
+
     // get all radio buttons
     var allAnswers = document.querySelectorAll('input[type=radio]');
 
@@ -346,10 +402,13 @@ function restartQuiz() {
     // set question number back to 1
     i = 1;
 
-    // reset progress bar +percentage
+    // reset progress bar + percentage
     progress = 0;
-    progressBar.setAttribute("value", progress);
     progressPercent.innerHTML = progress + "%";
+    document.getElementById("progress").style.width = progress;
+
+    // reset border radius of progress bar
+    document.getElementById("progress").style["border-radius"] = "5px 0 0 5px";
 
 
 }
