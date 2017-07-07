@@ -193,6 +193,10 @@ function isChecked(el) {
             document.getElementById("progress").style.width = progress;
 
             progressPercent.innerHTML = progress;
+            
+            if (i == 10) {
+                btnCalc.classList.remove("inactive");
+            }
 
             if (progress == "100%") {
                 document.getElementById("progress").style["border-radius"] = "5px";
@@ -313,7 +317,7 @@ function nextQuestion() {
         btnNext.classList.remove("active");
         btnNext.classList.add("no-display");
 
-        btnCalc.classList.add("active");
+        btnCalc.classList.remove("no-display");
     }
 
     // get the current question and show it
@@ -396,7 +400,8 @@ function restartQuiz() {
     // remove calculate score button, inactivate next button, show next button, hide previous button
     inactivateNextBtn();
     showNextBtn();
-    btnCalc.classList.remove("active");
+    btnCalc.classList.add("no-display");
+    btnCalc.classList.add("inactive");
     btnPrev.classList.remove("active");
 
     // set question number back to 1
