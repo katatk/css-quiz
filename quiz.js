@@ -168,13 +168,14 @@ function inactivateNextBtn() {
 
 /* ========
 
-Check is question has been answered before activating next button
+Check if question has been answered
 
 =========== */
 
-/* Store the questions that have been answered */
+/* store the questions that have been answered */
 var answeredQuestions = [];
 
+/* represents progress bar width in % */
 var progress;
 
 function isChecked(el) {
@@ -194,6 +195,7 @@ function isChecked(el) {
 
             progressPercent.innerHTML = progress;
 
+            // when the last question is answered, enabled and show the calc score button
             if (i == 10) {
                 btnCalc.classList.remove("inactive");
                 btnCalc.removeAttribute("disabled");
@@ -202,21 +204,14 @@ function isChecked(el) {
             if (progress == "100%") {
                 document.getElementById("progress").style["border-radius"] = "5px";
             }
+            activateNextBtn();
 
         }
-        activateNextBtn();
+
     }
 
 }
 
-/* ========
-
-Next Question
-
-=========== */
-
-// current question
-var i = 1;
 
 /* ========
 
@@ -303,6 +298,9 @@ function calcScore() {
 
 
 var progress;
+// current question
+var i = 1;
+
 
 function nextQuestion() {
 
@@ -326,21 +324,14 @@ function nextQuestion() {
     // get the question just been and hide it
     document.getElementsByClassName("inner")[i - 1].classList.remove("active");
 
-
-
     i++;
 
     // if current question has been answered, make next button active
     if (answeredQuestions.includes(i)) {
-
         activateNextBtn();
-    }
-
-    if (!answeredQuestions.includes(i)) {
+    } else if (!answeredQuestions.includes(i)) {
         inactivateNextBtn();
     }
-
-
 
 }
 
