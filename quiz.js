@@ -112,7 +112,6 @@ window.addEventListener("DOMContentLoaded", function () {
         output += animations[numRandom];
 
         output += "'>";
-        output += "<div>";
         output += "<legend class='question-heading'>" + questions[x].number + ". " + questions[x].title + "</legend>";
 
         for (var j = 0; j < questions[x].answers.length; j++) {
@@ -122,7 +121,6 @@ window.addEventListener("DOMContentLoaded", function () {
             output += "</div>";
         }
 
-        output += "</div>";
         output += "</div>";
     }
 
@@ -219,20 +217,26 @@ Calculate Score
 
 =========== */
 
+var incorrectQuestions = [];
+
+
+var incorrectIndex = [];
+var correctIndex = [];
+
 // set the user's score
 var score = 0;
 
 function calcScore() {
 
     // build an array for incorrect questions
-    var incorrect = [];
+    incorrect = [];
 
     for (var a = 0; a < questions.length; a++) {
 
-        // store correct answer for each question 
+        // store correct answer for certain question 
         var correct = questions[a].correctAnswer;
 
-        // get the radio buttons to loop through and see if they're checked
+        // get the radio buttons of certain question to loop through and see if they're checked
         var questionAnswers = document.querySelectorAll('[name=q' + questions[a].number + ']');
         var isChecked = false;
 
@@ -250,6 +254,8 @@ function calcScore() {
                 // if question is incorrect, add to incorrect list
                 else if (j != correct) {
                     incorrect.push(questions[a].number);
+                    incorrectIndex.push(j);
+
                 }
             }
         }
@@ -277,14 +283,46 @@ function calcScore() {
 
     /* build the html to display to the page */
     var output = "";
+    output += "<div class='box'>";
     output += "<p> Congratulations on completing the quiz!</p>"
     output += "<p> Your score is " + score + " out of " + questions.length + ". " + message + "</p><p>The following questions were incorrect:</p><ul>";
 
+    // list the numbers of the incorrect questions
     for (var y = 0; y < incorrect.length; y++) {
-        output += "<li class='incorrect-questions'>" + incorrect[y] + "</li>";
+        output += "<li class='incorrect'>" + incorrect[y] + "</li>";
 
     }
     output += "</ul>";
+    output += "</div>";
+
+    // list the incorrect answers in full
+    for (x = 0; x < incorrect.length; x++) {
+        var incorrectQuestion = incorrect[x];
+
+        output += "<div class='box'>";
+        output += "<legend class='question-heading'>" + incorrectQuestion + ". " + questions[incorrectQuestion - 1].title + "</legend>";
+
+        for (var j = 0; j < questions[incorrectQuestion - 1].answers.length; j++) {
+            output += "<div class='questions'>";
+
+            if (j == questions[incorrectQuestion - 1].correctAnswer) {
+                output += "<li class='correct'>";
+
+            } 
+            
+         /*   else if (j == incorrectIndex[j]) {
+                output += "<li class='incorrect'>";
+            } */else {
+                output += "<li class='other'>";
+            }
+            output += "<label>" + questions[incorrectQuestion - 1].answers[j] + "</label>";
+            output += "</li>";
+            output += "</div>";
+        }
+        output += "</div>";
+
+    }
+
 
     document.getElementById("score-container").innerHTML = output;
 
