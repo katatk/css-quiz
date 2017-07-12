@@ -1,26 +1,9 @@
-// get the buttons
-var btnStart = document.getElementById("start-quiz");
-var btnCalc = document.getElementById("calculate");
-var btnRestart = document.getElementById("retry");
-var btnNext = document.getElementById("next");
-var btnPrev = document.getElementById("previous");
-
 // add listeners to buttons
-btnStart.addEventListener("click", startQuiz);
-btnCalc.addEventListener("click", calcScore);
-btnRestart.addEventListener("click", restartQuiz);
-btnNext.addEventListener("click", nextQuestion);
-btnPrev.addEventListener("click", previousQuestion);
-
-// get the three divs
-var divInstructions = document.getElementById("instructions-container");
-var divOne = document.getElementById("one");
-var divTwo = document.getElementById("two");
-
-// get the progress bar + percent
-var progressBar = document.getElementById("progress-bar");
-var progressPercent = document.getElementById("percent-progress");
-
+document.getElementById("start-quiz").addEventListener("click", startQuiz);
+document.getElementById("calculate").addEventListener("click", calcScore);
+document.getElementById("retry").addEventListener("click", restartQuiz);
+document.getElementById("next").addEventListener("click", nextQuestion);
+document.getElementById("previous").addEventListener("click", previousQuestion);
 
 // question array
 var questions = [
@@ -96,11 +79,10 @@ questionTen = {
 
 ];
 
-// animations array 
-var animations = ["slideRight", "slideLeft", "slideUp", "slideDown"];
-
 // add a new animation to each question div
 window.addEventListener("DOMContentLoaded", function () {
+    // animations array 
+    var animations = ["slideRight", "slideLeft", "slideUp", "slideDown"];
 
     var numRandom;
     var output = "";
@@ -116,8 +98,8 @@ window.addEventListener("DOMContentLoaded", function () {
 
         for (var j = 0; j < questions[x].answers.length; j++) {
             output += "<div class='questions'>";
-            output += "<input type='radio' name='q" + questions[x].number + "' onclick='isChecked(this)'>";
-            output += "<label>" + questions[x].answers[j] + "</label>";
+            output += "<label><input type='radio' name='q" + questions[x].number + "' onclick='isChecked(this)'>";
+            output += questions[x].answers[j] + "</label>";
             output += "</div>";
         }
 
@@ -140,27 +122,27 @@ Start Quiz
 =========== */
 
 function startQuiz() {
-    divInstructions.style.display = 'none';
-    divOne.classList.remove("no-display");
+    document.getElementById("instructions-container").style.display = 'none';
+    document.getElementById("one").classList.remove("no-display");
 }
 
 /* show next button */
 function showNextBtn() {
-    btnNext.classList.remove("no-display");
+    document.getElementById("next").classList.remove("no-display");
 }
 
 /* make next button active */
 function activateNextBtn() {
-    btnNext.classList.remove("inactive");
-    btnNext.removeAttribute("disabled");
-    btnNext.classList.add("animate-right-arrow");
+    document.getElementById("next").classList.remove("inactive");
+    document.getElementById("next").removeAttribute("disabled");
+    document.getElementById("next").classList.add("animate-right-arrow");
 }
 
 /* make next button inactive */
 function inactivateNextBtn() {
-    btnNext.classList.add("inactive");
-    btnNext.setAttribute("disabled", "");
-    btnNext.classList.remove("animate-right-arrow");
+    document.getElementById("next").classList.add("inactive");
+    document.getElementById("next").setAttribute("disabled", "");
+    document.getElementById("next").classList.remove("animate-right-arrow");
 }
 
 
@@ -173,10 +155,10 @@ Check if question has been answered
 /* store the questions that have been answered */
 var answeredQuestions = [];
 
-/* represents progress bar width in % */
-var progress;
-
 function isChecked(el) {
+
+    /* represents progress bar width in % */
+    var progress;
 
     // if the current radio box is checked
     if (el.checked === true) {
@@ -191,12 +173,12 @@ function isChecked(el) {
             progress = (i * 10) + "%";
             document.getElementById("progress").style.width = progress;
 
-            progressPercent.innerHTML = progress;
+            document.getElementById("percent-progress").innerHTML = progress;
 
             // when the last question is answered, enabled and show the calc score button
             if (i == 10) {
-                btnCalc.classList.remove("inactive");
-                btnCalc.removeAttribute("disabled");
+                document.getElementById("calculate").classList.remove("inactive");
+                document.getElementById("calculate").removeAttribute("disabled");
             }
 
             if (progress == "100%") {
@@ -217,15 +199,14 @@ Calculate Score
 
 =========== */
 
-var incorrectQuestions = [];
-
-// set the user's score
-var score = 0;
 
 function calcScore() {
 
-    // build an array for incorrect questions
-    incorrect = [];
+
+    var incorrectQuestions = [];
+
+    // set the user's score
+    var score = 0;
 
     for (var a = 0; a < questions.length; a++) {
 
@@ -321,21 +302,14 @@ function calcScore() {
     document.getElementById("score-container").innerHTML = output;
 
     /* hide the questions div and show the score div */
-    divTwo.style.display = 'block';
-    divOne.style.display = 'none';
-
-    // reset score and remove incorrect questions from array
-    score = 0;
-
-    incorrectQuestions = [];
+    document.getElementById("two").style.display = 'block';
+    document.getElementById("one").style.display = 'none';
 
 }
 
 
-var progress;
 // current question
 var i = 1;
-
 
 function nextQuestion() {
 
@@ -343,15 +317,15 @@ function nextQuestion() {
     if (i >= 1) {
 
         // go to next question with next button being inactive
-        btnPrev.classList.add("active");
+        document.getElementById("previous").classList.add("active");
     }
 
     // on the last question, hide the next button and show the calculation button
     if (i == 9) {
-        btnNext.classList.remove("active");
-        btnNext.classList.add("no-display");
+        document.getElementById("next").classList.remove("active");
+        document.getElementById("next").classList.add("no-display");
 
-        btnCalc.classList.remove("no-display");
+        document.getElementById("calculate").classList.remove("no-display");
     }
 
     // get the current question and show it
@@ -377,13 +351,13 @@ function previousQuestion() {
     // if on question 10 and previous button is pushed, hide calc score button and show next question button
     if (i == 10) {
         showNextBtn();
-        btnCalc.classList.remove("active");
-        btnCalc.classList.add("no-display");
+        document.getElementById("calculate").classList.remove("active");
+        document.getElementById("calculate").classList.add("no-display");
 
     }
     if (i == 2) {
-        btnPrev.classList.remove("active");
-        btnPrev.classList.add("invisible");
+        document.getElementById("previous").classList.remove("active");
+        document.getElementById("previous").classList.add("invisible");
     }
     if (i > 1) {
         // get element at index (starting with 0)
@@ -418,8 +392,8 @@ function restartQuiz() {
     }
 
     // display questions, hide total div
-    divTwo.style.display = 'none';
-    divOne.style.display = 'block';
+    document.getElementById("two").style.display = 'none';
+    document.getElementById("one").style.display = 'block';
 
     // hide the 10th question, show the 1st question
     document.getElementsByClassName("inner")[9].classList.remove("active")
@@ -428,17 +402,17 @@ function restartQuiz() {
     // remove calculate score button, inactivate next button, show next button, hide previous button
     inactivateNextBtn();
     showNextBtn();
-    btnCalc.classList.add("no-display");
-    btnCalc.classList.add("inactive");
-    btnCalc.setAttribute("disabled", "");
-    btnPrev.classList.remove("active");
+    document.getElementById("calculate").classList.add("no-display");
+    document.getElementById("calculate").classList.add("inactive");
+    document.getElementById("calculate").setAttribute("disabled", "");
+    document.getElementById("previous").classList.remove("active");
 
     // set question number back to 1
     i = 1;
 
     // reset progress bar + percentage
-    progress = 0;
-    progressPercent.innerHTML = progress + "%";
+    var progress = 0;
+    document.getElementById("percent-progress").innerHTML = progress + "%";
     document.getElementById("progress").style.width = progress;
 
     // reset border radius of progress bar
