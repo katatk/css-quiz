@@ -219,10 +219,6 @@ Calculate Score
 
 var incorrectQuestions = [];
 
-
-var incorrectIndex = [];
-var correctIndex = [];
-
 // set the user's score
 var score = 0;
 
@@ -253,9 +249,11 @@ function calcScore() {
 
                 // if question is incorrect, add to incorrect list
                 else if (j != correct) {
-                    incorrect.push(questions[a].number);
-                    incorrectIndex.push(j);
-
+                    var incorrect = {
+                        questionIndex: a,
+                        incorrectIndex: j
+                    };
+                    incorrectQuestions.push(incorrect);
                 }
             }
         }
@@ -288,34 +286,30 @@ function calcScore() {
     output += "<p> Your score is " + score + " out of " + questions.length + ". " + message + "</p><p>The following questions were incorrect:</p><ul>";
 
     // list the numbers of the incorrect questions
-    for (var y = 0; y < incorrect.length; y++) {
-        output += "<li class='incorrect'>" + incorrect[y] + "</li>";
+    for (var y = 0; y < incorrectQuestions.length; y++) {
+        output += "<li class='question incorrect'>" + questions[incorrectQuestions[y].questionIndex].number + "</li>";
 
     }
     output += "</ul>";
     output += "</div>";
 
     // list the incorrect answers in full
-    for (x = 0; x < incorrect.length; x++) {
-        var incorrectQuestion = incorrect[x];
+    for (x = 0; x < incorrectQuestions.length; x++) {
 
         output += "<div class='box'>";
-        output += "<legend class='question-heading'>" + incorrectQuestion + ". " + questions[incorrectQuestion - 1].title + "</legend>";
+        output += "<legend class='question-heading'>" + questions[incorrectQuestions[x].questionIndex].number + ". " + questions[incorrectQuestions[x].questionIndex].title + "</legend>";
 
-        for (var j = 0; j < questions[incorrectQuestion - 1].answers.length; j++) {
+        for (var j = 0; j < questions[incorrectQuestions[x].questionIndex].answers.length; j++) {
             output += "<div class='questions'>";
-
-            if (j == questions[incorrectQuestion - 1].correctAnswer) {
-                output += "<li class='correct'>";
-
-            } 
-            
-         /*   else if (j == incorrectIndex[j]) {
-                output += "<li class='incorrect'>";
-            } */else {
-                output += "<li class='other'>";
+            output += "<li class='question ";
+            if (j == questions[incorrectQuestions[x].questionIndex].correctAnswer) {
+                output += "correct'>";
+            } else if (j == incorrectQuestions[x].incorrectIndex) {
+                output += "incorrect'>";
+            } else {
+                output += "other'>";
             }
-            output += "<label>" + questions[incorrectQuestion - 1].answers[j] + "</label>";
+            output += "<label>" + questions[incorrectQuestions[x].questionIndex].answers[j] + "</label>";
             output += "</li>";
             output += "</div>";
         }
@@ -330,7 +324,10 @@ function calcScore() {
     divTwo.style.display = 'block';
     divOne.style.display = 'none';
 
+    // reset score and remove incorrect questions from array
     score = 0;
+
+    incorrectQuestions = [];
 
 }
 
