@@ -7,70 +7,61 @@ document.getElementById("previous").addEventListener("click", previousQuestion);
 
 // question array
 var questions = [
-questionOne = {
+    {
         number: 1,
         title: 'What does CSS stand for?',
         answers: ['Cascading CSS', 'Cascading style sheets', 'Cascading separate style'],
         correctAnswer: 1
 },
-
-questionTwo = {
+    {
         number: 2,
         title: 'Which attribute can set text to bold?',
         answers: ['text-decoration', 'font-style', 'font-weight'],
         correctAnswer: 2
 },
-
-questionThree = {
+    {
         number: 3,
         title: 'Which tag is used to link an external CSS file?',
         answers: ['<code>&lt;script&gt;</code>', '<code>&lt;link&gt;</code>', '<code>&lt;rel&gt;</code>'],
         correctAnswer: 1
 },
-
-questionFour = {
+    {
         number: 4,
         title: 'Which attribute sets the underline property?',
         answers: ['font-style', 'text-decoration', 'font-weight'],
         correctAnswer: 1
 },
-
-questionFive = {
+    {
         number: 5,
         title: 'Which measurement is NOT relative?',
         answers: ['rem', 'cm', '%', 'em'],
         correctAnswer: 1
 },
-
-questionSix = {
+    {
         number: 6,
         title: 'Which measurement unit IS relative?',
         answers: ['em', 'cm', 'mm', 'inch'],
         correctAnswer: 0
 },
-
-questionSeven = {
+    {
         number: 7,
         title: 'What attribute is used move an elements content away from its border?',
         answers: ['margin', 'padding', 'border', 'width'],
         correctAnswer: 1
 },
-
-questionEight = {
+    {
         number: 8,
         title: 'Which attribute does not contribute to a block elements total width?',
         answers: ['width', 'border', 'background-image', 'padding'],
         correctAnswer: 2
 },
-
-questionNine = {
+    {
         number: 9,
         title: 'What property changes positioned elements display order?',
         answers: ['width', 'background', 'z-index', 'azimuth'],
         correctAnswer: 2
 },
-
-questionTen = {
+    {
         number: 10,
         title: 'Which value of background-repeat will cause a background to repeat vertically?',
         answers: ['repeat-x', 'repeat', 'repeat-y', 'no-repeat'],
@@ -98,7 +89,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
         for (var j = 0; j < questions[x].answers.length; j++) {
             output += "<div class='questions'>";
-            output += "<label><input type='radio' name='q" + questions[x].number + "' onclick='isChecked(this)'>";
+            output += "<label><input type='radio' name='q" + questions[x].number + "' onclick='processChecked(this)'>";
             output += questions[x].answers[j] + "</label>";
             output += "</div>";
         }
@@ -155,39 +146,53 @@ Check if question has been answered
 /* store the questions that have been answered */
 var answeredQuestions = [];
 
-function isChecked(el) {
+/* everytime a radio is selected, check to see if the current question has been answered, if not, add it to the answeredQuestions array */
+function processChecked(el) {
 
-    /* represents progress bar width in % */
-    var progress;
+
 
     // if the current radio box is checked
     if (el.checked === true) {
 
         // if the question has not been answered yet (is not in the answered questions array)
-        if (answeredQuestions.indexOf(i) == -1) {
+        if (answeredQuestions.indexOf(currentQuestion) == -1) {
 
             // add to the answered questions array
-            answeredQuestions.push(i);
+            answeredQuestions.push(currentQuestion);
 
-            // add to the progress bar
-            progress = (i * 10) + "%";
-            document.getElementById("progress").style.width = progress;
-
-            document.getElementById("percent-progress").innerHTML = progress;
+            updateProgress(currentQuestion * 10);
 
             // when the last question is answered, enabled and show the calc score button
-            if (i == 10) {
+            if (currentQuestion == 10) {
                 document.getElementById("calculate").classList.remove("inactive");
                 document.getElementById("calculate").removeAttribute("disabled");
             }
 
-            if (progress == "100%") {
-                document.getElementById("progress").style["border-radius"] = "5px";
-            }
+
             activateNextBtn();
 
         }
 
+    }
+
+}
+
+
+/* Update progress bar */
+
+function updateProgress(progress) {
+    // add to the progress bar
+    progress += "%";
+    document.getElementById("progress").style.width = progress;
+
+    document.getElementById("percent-progress").innerHTML = progress;
+
+    // make corners of progress bar rounded at 100% to fit in the container
+    if (progress == "100%") {
+        document.getElementById("progress").style["border-radius"] = "5px";
+    }
+    if (progress == "0%") {
+        document.getElementById("progress").style["border-radius"] = "5px 0 0 5px";
     }
 
 }
@@ -259,6 +264,13 @@ function calcScore() {
         message = "Wow, you got 100%! You clever cookie you (;";
     }
 
+    displayScore(score);
+    displayIncorrectQuestions(incorrectQuestions);
+}
+
+
+/* displays the score at the end and a list of incorrect questions */
+function displayScore(score) {
 
     /* build the html to display to the page */
     var output = "";
@@ -273,6 +285,11 @@ function calcScore() {
     }
     output += "</ul>";
     output += "</div>";
+
+}
+
+/* displays the incorrect questions in the format they appeared in the quiz + the user's incorrect answer and correct answer */
+function displayIncorrectQuestions(incorrectQuestions) {
 
     // list the incorrect answers in full
     for (x = 0; x < incorrectQuestions.length; x++) {
@@ -307,21 +324,19 @@ function calcScore() {
 
 }
 
+var currentQuestion = 1;
 
-// current question
-var i = 1;
-
-function nextQuestion() {
-
+function nextQuestion(e) {
+    debugger;
     // show previous question button from question 2 onwards
-    if (i >= 1) {
+    if (currentQuestion >= 1) {
 
         // go to next question with next button being inactive
         document.getElementById("previous").classList.add("active");
     }
 
     // on the last question, hide the next button and show the calculation button
-    if (i == 9) {
+    if (currentQuestion == 9) {
         document.getElementById("next").classList.remove("active");
         document.getElementById("next").classList.add("no-display");
 
@@ -329,16 +344,16 @@ function nextQuestion() {
     }
 
     // get the current question and show it
-    document.getElementsByClassName("inner")[i].classList.add("active");
+    document.getElementsByClassName("inner")[currentQuestion].classList.add("active");
     // get the question just been and hide it
-    document.getElementsByClassName("inner")[i - 1].classList.remove("active");
+    document.getElementsByClassName("inner")[currentQuestion - 1].classList.remove("active");
 
-    i++;
+    currentQuestion++;
 
     // if current question has been answered, make next button active
-    if (answeredQuestions.includes(i)) {
+    if (answeredQuestions.includes(currentQuestion)) {
         activateNextBtn();
-    } else if (!answeredQuestions.includes(i)) {
+    } else if (!answeredQuestions.includes(currentQuestion)) {
         inactivateNextBtn();
     }
 
@@ -349,24 +364,24 @@ function previousQuestion() {
     activateNextBtn();
 
     // if on question 10 and previous button is pushed, hide calc score button and show next question button
-    if (i == 10) {
+    if (currentQuestion == 10) {
         showNextBtn();
         document.getElementById("calculate").classList.remove("active");
         document.getElementById("calculate").classList.add("no-display");
 
     }
-    if (i == 2) {
+    if (currentQuestion == 2) {
         document.getElementById("previous").classList.remove("active");
         document.getElementById("previous").classList.add("invisible");
     }
-    if (i > 1) {
+    if (currentQuestion > 1) {
         // get element at index (starting with 0)
-        document.getElementsByClassName("inner")[i - 1].classList.remove("active");
+        document.getElementsByClassName("inner")[currentQuestion - 1].classList.remove("active");
 
         // get the element 1 after the first one
-        document.getElementsByClassName("inner")[i - 2].classList.add("active");
+        document.getElementsByClassName("inner")[currentQuestion - 2].classList.add("active");
 
-        i--;
+        currentQuestion--;
     }
 }
 
@@ -408,15 +423,12 @@ function restartQuiz() {
     document.getElementById("previous").classList.remove("active");
 
     // set question number back to 1
-    i = 1;
+    currentQuestion = 1;
 
     // reset progress bar + percentage
-    var progress = 0;
-    document.getElementById("percent-progress").innerHTML = progress + "%";
-    document.getElementById("progress").style.width = progress;
+    updateProgress(0);
 
-    // reset border radius of progress bar
-    document.getElementById("progress").style["border-radius"] = "5px 0 0 5px";
+
 
 
 }
