@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CSS Quiz</title>
+    <link href="https://fonts.googleapis.com/css?family=Chewy" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <main role="main">
+        <h1>CSS Quiz</h1>
+        <div class="container fadeIn" id="instructions-container">
+            <div class="box">
+                <h2>How to play</h2>
+                <ul>
+                    <li>You must answer each question before moving on to the next</li>
+                    <li>Your score will be calculated and displayed at the end</li>
+                    <li>You will see which questions you got wrong and the correct answer</li>
+                    <li>Have fun!</li>
+                </ul>
+            </div>
+
+            <div class="last">
+
+                <button id="start-quiz">Let's go!</button>
+
+            </div>
+        </div>
+
+
+        <div class="container no-display" id="one">
+            <div id="progress-bar-container">
+                <div id="percent-progress">0%</div>
+                <div id="progress-bar">
+                    <div id="progress" class="grow" style="width:0"></div>
+                </div>
+            </div>
+
+
+            <div id="questions-container">
+
+            </div>
+
+            <div class="last">
+
+                <button id="previous" class="animate-left-arrow invisible"><i class="icon-left"></i>Previous Question</button>
+
+                <button id="next" class="inactive" disabled>Next Question<i class="icon-right"></i></button>
+
+                <button id="calculate" class="no-display inactive" disabled>Calculate Score</button>
+
+            </div>
+
+        </div>
+
+        <div class="container" id="two">
+            <div class="bigEntrance" id="score-container">
+
+            </div>
+            <div class="btn-container">
+                <button id="retry" class="animate-spin"><i class="icon-cw"></i>Retry</button>
+            </div>
+
+        </div>
+    </main>
+    <script defer src="quiz.js"></script>
+    <script defer src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+</body>
+
+</html>
