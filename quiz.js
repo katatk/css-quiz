@@ -200,7 +200,7 @@ function updateProgress(progress) {
 
 /* ========
 
-Calculate Score
+Display Score
 
 =========== */
 
@@ -254,41 +254,46 @@ function displayScore(incorrectQuestions, score, message) {
 
 }
 
+/* ========
 
+Calculate Score
+
+=========== */
 
 function calcScore() {
 
+    // store the incorrect questions as objects in an array
     var incorrectQuestions = [];
 
     // set the user's score
     var score = 0;
-
+    
+    // a is the current question
     for (var a = 0; a < questions.length; a++) {
 
         // store correct answer for certain question 
         var correct = questions[a].correctAnswer;
 
-        // get the radio buttons of certain question to loop through and see if they're checked
+        // get the radio buttons of current question to loop through and see if they're checked
         var questionAnswers = document.querySelectorAll('[name=q' + questions[a].number + ']');
-        var isChecked = false;
 
         // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
         for (var j = 0; j < questions[a].answers.length; j++) {
             // if an answer is checked, then see if it is the correct answer
             if (questionAnswers[j].checked == true) {
-                isChecked = true;
-
+              
                 // if correct answer, add to score
                 if (j == correct) {
                     score++;
                 }
 
-                // if question is incorrect, add to incorrect list
+                // if question is incorrect, add to incorrect array
                 else if (j != correct) {
                     var incorrect = {
                         questionIndex: a,
                         incorrectIndex: j
                     };
+                    
                     incorrectQuestions.push(incorrect);
                 }
             }
