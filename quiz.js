@@ -149,8 +149,6 @@ var answeredQuestions = [];
 /* everytime a radio is selected, check to see if the current question has been answered, if not, add it to the answeredQuestions array */
 function processChecked(el) {
 
-
-
     // if the current radio box is checked
     if (el.checked === true) {
 
@@ -167,7 +165,6 @@ function processChecked(el) {
                 document.getElementById("calculate").classList.remove("inactive");
                 document.getElementById("calculate").removeAttribute("disabled");
             }
-
 
             activateNextBtn();
 
@@ -200,57 +197,92 @@ function updateProgress(progress) {
 
 /* ========
 
-Display Score
+Generate Score
 
 =========== */
 
-/* displays the score at the end and displays the incorrect questions in the format they appeared in the quiz + the user's incorrect answer and correct answer */
-function displayScore(incorrectQuestions, score, message) {
-    
+/* generates the score message */
+function generateScoreMessage(score, totalQuestions) {
+
+    var message = "";
+
+    if (score < 6) {
+        message = "Oh dear... looks like you could use some more practice.";
+    }
+
+    if (6 <= score && score <= 7) {
+        message = "Not too shabby.";
+    }
+
+    if (8 <= score && score <= 9) {
+        message = "Go you!";
+    }
+
+    if (score == 10) {
+        message = "Wow, you got 100%! You clever cookie you (;";
+    }
+
     /* build the html to display to the page */
-    var output = "<div class='box'>";
-    output += "<p> Congratulations on completing the quiz!</p>"
-    output += "<p> Your score is " + score + " out of " + questions.length + ". " + message + "</p><p>The following questions were incorrect:</p><ul>";
-    
-      // list the numbers of the incorrect questions
+    var scoreOutput = "<div class='box'>";
+    scoreOutput += "<p> Congratulations on completing the quiz!</p>";
+    scoreOutput += "<p> Your score is " + score + " out of " + totalQuestions + ". " + message + "</p>";
+
+    return scoreOutput;
+
+}
+
+function generateIncorrectQuestions(incorrectQuestions) {
+
+    var output = "";
+    output += generateIncorrectSummary(incorrectQuestions);
+    output += generateIncorrectDetail(incorrectQuestions);
+
+    return output;
+}
+
+// list the incorrect answers
+function generateIncorrectSummary(incorrectQuestions) {
+    var output = "<p>The following questions were incorrect:</p><ul>";
+    // list the numbers of the incorrect questions
     for (var y = 0; y < incorrectQuestions.length; y++) {
-        output += "<li class='question incorrect'>" + questions[incorrectQuestions[y].questionIndex].number + "</li>";
+        output += "<li class='question incorrect'>" + incorrectQuestions[y].question.number + "</li>";
 
     }
     output += "</ul>";
     output += "</div>";
+    
+    return output;
 
+}
 
-    // list the incorrect answers in full
+// list the incorrect answers in full
+function generateIncorrectDetail(incorrectQuestions) {
+    
+    var output = "";
     for (x = 0; x < incorrectQuestions.length; x++) {
 
         output += "<div class='box'>";
-        output += "<legend class='question-heading'>" + questions[incorrectQuestions[x].questionIndex].number + ". " + questions[incorrectQuestions[x].questionIndex].title + "</legend>";
+        output += "<legend class='question-heading'>" + incorrectQuestions[x].question.number + ". " + incorrectQuestions[x].question.title + "</legend>";
 
-        for (var j = 0; j < questions[incorrectQuestions[x].questionIndex].answers.length; j++) {
+        for (var j = 0; j < incorrectQuestions[x].question.answers.length; j++) {
             output += "<div class='questions'>";
             output += "<li class='question ";
-            if (j == questions[incorrectQuestions[x].questionIndex].correctAnswer) {
+            if (j == incorrectQuestions[x].question.correctAnswer) {
                 output += "correct'>";
             } else if (j == incorrectQuestions[x].incorrectIndex) {
                 output += "incorrect'>";
             } else {
                 output += "other'>";
             }
-            output += "<label>" + questions[incorrectQuestions[x].questionIndex].answers[j] + "</label>";
+            output += "<label>" + incorrectQuestions[x].question.answers[j] + "</label>";
             output += "</li>";
             output += "</div>";
         }
         output += "</div>";
 
     }
-
-
-    document.getElementById("score-container").innerHTML = output;
-
-    /* hide the questions div and show the score div */
-    document.getElementById("two").style.display = 'block';
-    document.getElementById("one").style.display = 'none';
+    
+    return output;
 
 }
 
@@ -267,7 +299,7 @@ function calcScore() {
 
     // set the user's score
     var score = 0;
-    
+
     // a is the current question
     for (var a = 0; a < questions.length; a++) {
 
@@ -281,46 +313,40 @@ function calcScore() {
         for (var j = 0; j < questions[a].answers.length; j++) {
             // if an answer is checked, then see if it is the correct answer
             if (questionAnswers[j].checked == true) {
-              
+
                 // if correct answer, add to score
                 if (j == correct) {
                     score++;
                 }
 
                 // if question is incorrect, add to incorrect array
+                // incorrectIndex is the index of the user's chosen incorrect answer
                 else if (j != correct) {
                     var incorrect = {
-                        questionIndex: a,
+                        question: questions[a],
                         incorrectIndex: j
                     };
-                    
+
                     incorrectQuestions.push(incorrect);
                 }
             }
         }
     }
 
-    var message = "";
     var output = "";
 
-    if (score < 6) {
-        message = "Oh dear... looks like you could use some more practice.";
-    }
+    // generate the score message
+    output += generateScoreMessage(score, questions.length);
 
-    if (6 <= score && score <= 7) {
-        message = "Not too shabby.";
-    }
-
-    if (8 <= score && score <= 9) {
-        message = "Go you!";
-    }
+    // generate the incorrect questions in the format they appear in the quiz
+    output += generateIncorrectQuestions(incorrectQuestions);
 
 
-    if (score == 10) {
-        message = "Wow, you got 100%! You clever cookie you (;";
-    }
+    document.getElementById("score-container").innerHTML = output;
 
-    displayScore(incorrectQuestions, score, message);
+    /* hide the questions div and show the score div */
+    document.getElementById("two").style.display = 'block';
+    document.getElementById("one").style.display = 'none';
 }
 
 
