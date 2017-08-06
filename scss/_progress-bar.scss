@@ -1,0 +1,29 @@
+#progress-bar-container {
+    position: relative;
+}
+
+#progress-bar {
+    width: 100%;
+    height: 2rem;
+    background-color: #ECF0F1;
+    border-radius: 5px;
+}
+
+#progress {
+    background-color: $btn-color;
+    border-radius: 5px 0 0 5px;
+    height: 100%;
+    max-width: 100%;
+}
+
+#percent-progress {
+    display: block;
+    text-align: right;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.grow {
+    -webkit-transition: width 0.5s;
+    transition: width 0.5s;
+}

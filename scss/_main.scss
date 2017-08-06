@@ -1,0 +1,227 @@
+@font-face {
+    font-family: 'unica_oneregular';
+    src: url('../font/unicaone-regular-webfont.woff2') format('woff2'), url('../font/unicaone-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'varela_roundregular';
+    src: url('../font/varelaround-regular-webfont.woff2') format('woff2'), url('../font/varelaround-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    font-size: 10px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    font-size: 1.4rem;
+    font-family: 'varela_roundregular', sans-serif;
+    color: #444;
+    padding: 0;
+    margin: 0;
+    min-height: 100%;
+    padding: 4rem 2rem;
+    @media (min-width: 480px) {
+        padding: 4rem 4rem;
+    }
+}
+
+main {
+    display: block;
+}
+
+
+h1 {
+    color: #fff;
+    text-align: center;
+    font: 400 4rem/1 'Chewy', cursive;
+    margin-bottom: 0;
+    text-shadow: $text-shadow;
+    @media (min-width: 360px) {
+        font-size: 4.5rem;
+    }
+    @media (min-width: 480px) {
+        font-size: 6rem;
+    }
+}
+
+h2 {
+    margin: 0 0 1rem;
+}
+
+p {
+    margin-top: 0;
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.box {
+    padding: 2rem;
+    background-color: #ECF0F1;
+    margin-top: 2rem;
+    border: 1px solid #C1C2C4;
+    border-radius: 5px;
+}
+
+.no-display {
+    display: none;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.active {
+    display: block;
+    visibility: visible;
+}
+
+.inactive {
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    &:hover {
+        top: 0;
+        background-color: $btn-color;
+        cursor: default;
+    }
+}
+
+
+/* hide the last div initially */
+
+#two {
+    display: none;
+}
+
+.question-heading {
+    display: block;
+    border-bottom: 1px solid #C1C2C4;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.questions {
+    margin-bottom: 1em;
+    @media (min-width: 768px) {
+        margin-bottom: 0.2em;
+    }
+}
+
+.btn-container {
+    margin-top: 2rem;
+}
+
+.last {
+    margin-top: 0;
+    justify-content: space-between;
+    display: flex;
+    margin-top: 2rem;
+}
+
+button {
+    background-color: $btn-color;
+    color: #fff;
+    border: 0;
+    padding: 1rem;
+    display: block;
+    flex-grow: 0;
+    font-size: 1.4rem;
+    font-family: 'Varela round', sans-serif;
+    border-radius: 5px;
+    position: relative;
+    text-shadow: $text-shadow;
+    &:hover {
+        cursor: pointer;
+        background-color: $btn-hover-color;
+        top: 2px;
+    }
+    &#start,
+    &#restart {
+        padding: 1.2rem;
+    }
+}
+
+
+/* give retry and back to start icons right margin */
+
+.icon-cw {
+    margin-right: 0.2em;
+}
+
+.icon-right,
+.icon-left {
+    position: relative;
+}
+
+ul {
+    margin: 0;
+    padding-left: 2rem;
+    text-align: left;
+}
+
+li.question {
+     list-style: none;
+    
+      &::before {
+         font-family: 'fontello';
+        display: inline-block;
+        margin-right: 1em;
+        font-size: 1.2rem;
+          min-width: 12px;
+    }
+    
+}
+
+li.incorrect {
+   
+    &::before {
+        content: '\e803';
+        }
+}
+
+li.correct {
+       &::before {
+        content: '\e804';
+        }
+}
+
+li.other {
+       &::before {
+        content: '\e804';
+           visibility: hidden;
+        
+    }
+}
+
+.icon-cancel {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+}
+
+@media (min-width: 480px) {
+    body,
+    button {
+        font-size: 1.6rem;
+    }
+    button {
+        display: inline-block;
+    }
+}
