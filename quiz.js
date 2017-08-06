@@ -149,8 +149,6 @@ var answeredQuestions = [];
 /* everytime a radio is selected, check to see if the current question has been answered, if not, add it to the answeredQuestions array */
 function processChecked(el) {
 
-
-
     // if the current radio box is checked
     if (el.checked === true) {
 
@@ -167,7 +165,6 @@ function processChecked(el) {
                 document.getElementById("calculate").classList.remove("inactive");
                 document.getElementById("calculate").removeAttribute("disabled");
             }
-
 
             activateNextBtn();
 
@@ -200,50 +197,12 @@ function updateProgress(progress) {
 
 /* ========
 
-Calculate Score
+Generate Score
 
 =========== */
 
-
-function calcScore() {
-
-
-    var incorrectQuestions = [];
-
-    // set the user's score
-    var score = 0;
-
-    for (var a = 0; a < questions.length; a++) {
-
-        // store correct answer for certain question 
-        var correct = questions[a].correctAnswer;
-
-        // get the radio buttons of certain question to loop through and see if they're checked
-        var questionAnswers = document.querySelectorAll('[name=q' + questions[a].number + ']');
-        var isChecked = false;
-
-        // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
-        for (var j = 0; j < questions[a].answers.length; j++) {
-            // if an answer is checked, then see if it is the correct answer
-            if (questionAnswers[j].checked == true) {
-                isChecked = true;
-
-                // if correct answer, add to score
-                if (j == correct) {
-                    score++;
-                }
-
-                // if question is incorrect, add to incorrect list
-                else if (j != correct) {
-                    var incorrect = {
-                        questionIndex: a,
-                        incorrectIndex: j
-                    };
-                    incorrectQuestions.push(incorrect);
-                }
-            }
-        }
-    }
+/* generates the score message */
+function generateScoreMessage(score, totalQuestions) {
 
     var message = "";
 
@@ -259,61 +218,128 @@ function calcScore() {
         message = "Go you!";
     }
 
-
     if (score == 10) {
         message = "Wow, you got 100%! You clever cookie you (;";
     }
 
-    displayScore(score);
-    displayIncorrectQuestions(incorrectQuestions);
+    /* build the html to display to the page */
+    var scoreOutput = "<div class='box'>";
+    scoreOutput += "<p> Congratulations on completing the quiz!</p>";
+    scoreOutput += "<p> Your score is " + score + " out of " + totalQuestions + ". " + message + "</p>";
+
+    return scoreOutput;
+
 }
 
+function generateIncorrectQuestions(incorrectQuestions) {
 
-/* displays the score at the end and a list of incorrect questions */
-function displayScore(score) {
-
-    /* build the html to display to the page */
     var output = "";
-    output += "<div class='box'>";
-    output += "<p> Congratulations on completing the quiz!</p>"
-    output += "<p> Your score is " + score + " out of " + questions.length + ". " + message + "</p><p>The following questions were incorrect:</p><ul>";
+    output += generateIncorrectSummary(incorrectQuestions);
+    output += generateIncorrectDetail(incorrectQuestions);
 
+    return output;
+}
+
+// list the incorrect answers
+function generateIncorrectSummary(incorrectQuestions) {
+    var output = "<p>The following questions were incorrect:</p><ul>";
     // list the numbers of the incorrect questions
     for (var y = 0; y < incorrectQuestions.length; y++) {
-        output += "<li class='question incorrect'>" + questions[incorrectQuestions[y].questionIndex].number + "</li>";
+        output += "<li class='question incorrect'>" + incorrectQuestions[y].question.number + "</li>";
 
     }
     output += "</ul>";
     output += "</div>";
+    
+    return output;
 
 }
 
-/* displays the incorrect questions in the format they appeared in the quiz + the user's incorrect answer and correct answer */
-function displayIncorrectQuestions(incorrectQuestions) {
-
-    // list the incorrect answers in full
+// list the incorrect answers in full
+function generateIncorrectDetail(incorrectQuestions) {
+    
+    var output = "";
     for (x = 0; x < incorrectQuestions.length; x++) {
 
         output += "<div class='box'>";
-        output += "<legend class='question-heading'>" + questions[incorrectQuestions[x].questionIndex].number + ". " + questions[incorrectQuestions[x].questionIndex].title + "</legend>";
+        output += "<legend class='question-heading'>" + incorrectQuestions[x].question.number + ". " + incorrectQuestions[x].question.title + "</legend>";
 
-        for (var j = 0; j < questions[incorrectQuestions[x].questionIndex].answers.length; j++) {
+        for (var j = 0; j < incorrectQuestions[x].question.answers.length; j++) {
             output += "<div class='questions'>";
             output += "<li class='question ";
-            if (j == questions[incorrectQuestions[x].questionIndex].correctAnswer) {
+            if (j == incorrectQuestions[x].question.correctAnswer) {
                 output += "correct'>";
             } else if (j == incorrectQuestions[x].incorrectIndex) {
                 output += "incorrect'>";
             } else {
                 output += "other'>";
             }
-            output += "<label>" + questions[incorrectQuestions[x].questionIndex].answers[j] + "</label>";
+            output += "<label>" + incorrectQuestions[x].question.answers[j] + "</label>";
             output += "</li>";
             output += "</div>";
         }
         output += "</div>";
 
     }
+    
+    return output;
+
+}
+
+/* ========
+
+Calculate Score
+
+=========== */
+
+function calcScore() {
+
+    // store the incorrect questions as objects in an array
+    var incorrectQuestions = [];
+
+    // set the user's score
+    var score = 0;
+
+    // a is the current question
+    for (var a = 0; a < questions.length; a++) {
+
+        // store correct answer for certain question 
+        var correct = questions[a].correctAnswer;
+
+        // get the radio buttons of current question to loop through and see if they're checked
+        var questionAnswers = document.querySelectorAll('[name=q' + questions[a].number + ']');
+
+        // loop through all the answers to see if they are checked, if a checked answer is the correct answer, add 1 to the score
+        for (var j = 0; j < questions[a].answers.length; j++) {
+            // if an answer is checked, then see if it is the correct answer
+            if (questionAnswers[j].checked == true) {
+
+                // if correct answer, add to score
+                if (j == correct) {
+                    score++;
+                }
+
+                // if question is incorrect, add to incorrect array
+                // incorrectIndex is the index of the user's chosen incorrect answer
+                else if (j != correct) {
+                    var incorrect = {
+                        question: questions[a],
+                        incorrectIndex: j
+                    };
+
+                    incorrectQuestions.push(incorrect);
+                }
+            }
+        }
+    }
+
+    var output = "";
+
+    // generate the score message
+    output += generateScoreMessage(score, questions.length);
+
+    // generate the incorrect questions in the format they appear in the quiz
+    output += generateIncorrectQuestions(incorrectQuestions);
 
 
     document.getElementById("score-container").innerHTML = output;
@@ -321,13 +347,12 @@ function displayIncorrectQuestions(incorrectQuestions) {
     /* hide the questions div and show the score div */
     document.getElementById("two").style.display = 'block';
     document.getElementById("one").style.display = 'none';
-
 }
+
 
 var currentQuestion = 1;
 
 function nextQuestion(e) {
-    debugger;
     // show previous question button from question 2 onwards
     if (currentQuestion >= 1) {
 
