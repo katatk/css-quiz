@@ -34,13 +34,13 @@ body {
     padding: 4rem 2rem;
     @media (min-width: 480px) {
         padding: 4rem 4rem;
+         font-size: 1.6rem;
     }
 }
 
 main {
     display: block;
 }
-
 
 h1 {
     color: #fff;
@@ -80,29 +80,6 @@ p {
     border-radius: 5px;
 }
 
-.no-display {
-    display: none;
-}
-
-.invisible {
-    visibility: hidden;
-}
-
-.active {
-    display: block;
-    visibility: visible;
-}
-
-.inactive {
-    filter: grayscale(100%);
-    -webkit-filter: grayscale(100%);
-    &:hover {
-        top: 0;
-        background-color: $btn-color;
-        cursor: default;
-    }
-}
-
 
 /* hide the last div initially */
 
@@ -125,10 +102,6 @@ p {
     }
 }
 
-.btn-container {
-    margin-top: 2rem;
-}
-
 .last {
     margin-top: 0;
     justify-content: space-between;
@@ -136,40 +109,6 @@ p {
     margin-top: 2rem;
 }
 
-button {
-    background-color: $btn-color;
-    color: #fff;
-    border: 0;
-    padding: 1rem;
-    display: block;
-    flex-grow: 0;
-    font-size: 1.4rem;
-    font-family: 'Varela round', sans-serif;
-    border-radius: 5px;
-    position: relative;
-    text-shadow: $text-shadow;
-    &:hover {
-        cursor: pointer;
-        background-color: $btn-hover-color;
-        top: 2px;
-    }
-    &#start,
-    &#restart {
-        padding: 1.2rem;
-    }
-}
-
-
-/* give retry and back to start icons right margin */
-
-.icon-cw {
-    margin-right: 0.2em;
-}
-
-.icon-right,
-.icon-left {
-    position: relative;
-}
 
 ul {
     margin: 0;
@@ -178,36 +117,32 @@ ul {
 }
 
 li.question {
-     list-style: none;
-    
-      &::before {
-         font-family: 'fontello';
+    list-style: none;
+    &::before {
+        font-family: 'fontello';
         display: inline-block;
         margin-right: 1em;
         font-size: 1.2rem;
-          min-width: 12px;
+        min-width: 12px;
     }
-    
 }
 
 li.incorrect {
-   
     &::before {
         content: '\e803';
-        }
+    }
 }
 
 li.correct {
-       &::before {
+    &::before {
         content: '\e804';
-        }
+    }
 }
 
 li.other {
-       &::before {
+    &::before {
         content: '\e804';
-           visibility: hidden;
-        
+        visibility: hidden;
     }
 }
 
@@ -216,12 +151,4 @@ li.other {
     margin-right: 0.5rem;
 }
 
-@media (min-width: 480px) {
-    body,
-    button {
-        font-size: 1.6rem;
-    }
-    button {
-        display: inline-block;
-    }
-}
+

@@ -1,9 +1,17 @@
-// add listeners to buttons
+// store buttons as variables
+
+// only called once
 document.getElementById("start-quiz").addEventListener("click", startQuiz);
-document.getElementById("calculate").addEventListener("click", calcScore);
 document.getElementById("retry").addEventListener("click", restartQuiz);
-document.getElementById("next").addEventListener("click", nextQuestion);
-document.getElementById("previous").addEventListener("click", previousQuestion);
+
+var btnCalcScore = document.getElementById("calculate");
+var btnNextQuestion = document.getElementById("next");
+var btnPreviousQuestion = document.getElementById("previous");
+
+// add listeners to buttons
+btnCalcScore.addEventListener("click", calcScore);
+btnNextQuestion.addEventListener("click", nextQuestion);
+btnPreviousQuestion.addEventListener("click", previousQuestion);
 
 // question array
 var questions = [
@@ -119,21 +127,21 @@ function startQuiz() {
 
 /* show next button */
 function showNextBtn() {
-    document.getElementById("next").classList.remove("no-display");
+    btnNextQuestion.classList.remove("no-display");
 }
 
 /* make next button active */
 function activateNextBtn() {
-    document.getElementById("next").classList.remove("inactive");
-    document.getElementById("next").removeAttribute("disabled");
-    document.getElementById("next").classList.add("animate-right-arrow");
+    btnNextQuestion.classList.remove("inactive");
+    btnNextQuestion.removeAttribute("disabled");
+    btnNextQuestion.classList.add("animate-right-arrow");
 }
 
 /* make next button inactive */
 function inactivateNextBtn() {
-    document.getElementById("next").classList.add("inactive");
-    document.getElementById("next").setAttribute("disabled", "");
-    document.getElementById("next").classList.remove("animate-right-arrow");
+    btnNextQuestion.classList.add("inactive");
+    btnNextQuestion.setAttribute("disabled", "");
+    btnNextQuestion.classList.remove("animate-right-arrow");
 }
 
 
@@ -162,8 +170,8 @@ function processChecked(el) {
 
             // when the last question is answered, enabled and show the calc score button
             if (currentQuestion == 10) {
-                document.getElementById("calculate").classList.remove("inactive");
-                document.getElementById("calculate").removeAttribute("disabled");
+                btnCalcScore.classList.remove("inactive");
+                btnCalcScore.removeAttribute("disabled");
             }
 
             activateNextBtn();
@@ -250,14 +258,14 @@ function generateIncorrectSummary(incorrectQuestions) {
     }
     output += "</ul>";
     output += "</div>";
-    
+
     return output;
 
 }
 
 // list the incorrect answers in full
 function generateIncorrectDetail(incorrectQuestions) {
-    
+
     var output = "";
     for (x = 0; x < incorrectQuestions.length; x++) {
 
@@ -281,7 +289,7 @@ function generateIncorrectDetail(incorrectQuestions) {
         output += "</div>";
 
     }
-    
+
     return output;
 
 }
@@ -321,7 +329,7 @@ function calcScore() {
 
                 // if question is incorrect, add to incorrect array
                 // incorrectIndex is the index of the user's chosen incorrect answer
-                else if (j != correct) {
+                else {
                     var incorrect = {
                         question: questions[a],
                         incorrectIndex: j
@@ -357,15 +365,15 @@ function nextQuestion(e) {
     if (currentQuestion >= 1) {
 
         // go to next question with next button being inactive
-        document.getElementById("previous").classList.add("active");
+        btnPreviousQuestion.classList.add("active");
     }
 
     // on the last question, hide the next button and show the calculation button
     if (currentQuestion == 9) {
-        document.getElementById("next").classList.remove("active");
-        document.getElementById("next").classList.add("no-display");
+        btnNextQuestion.classList.remove("active");
+        btnNextQuestion.classList.add("no-display");
 
-        document.getElementById("calculate").classList.remove("no-display");
+        btnCalcScore.classList.remove("no-display");
     }
 
     // get the current question and show it
@@ -391,13 +399,13 @@ function previousQuestion() {
     // if on question 10 and previous button is pushed, hide calc score button and show next question button
     if (currentQuestion == 10) {
         showNextBtn();
-        document.getElementById("calculate").classList.remove("active");
-        document.getElementById("calculate").classList.add("no-display");
+        btnCalcScore.classList.remove("active");
+        btnCalcScore.classList.add("no-display");
 
     }
     if (currentQuestion == 2) {
-        document.getElementById("previous").classList.remove("active");
-        document.getElementById("previous").classList.add("invisible");
+        btnPreviousQuestion.classList.remove("active");
+        btnPreviousQuestion.classList.add("invisible");
     }
     if (currentQuestion > 1) {
         // get element at index (starting with 0)
@@ -442,10 +450,10 @@ function restartQuiz() {
     // remove calculate score button, inactivate next button, show next button, hide previous button
     inactivateNextBtn();
     showNextBtn();
-    document.getElementById("calculate").classList.add("no-display");
-    document.getElementById("calculate").classList.add("inactive");
-    document.getElementById("calculate").setAttribute("disabled", "");
-    document.getElementById("previous").classList.remove("active");
+    btnCalcScore.classList.add("no-display");
+    btnCalcScore.classList.add("inactive");
+    btnCalcScore.setAttribute("disabled", "");
+    btnPreviousQuestion.classList.remove("active");
 
     // set question number back to 1
     currentQuestion = 1;
